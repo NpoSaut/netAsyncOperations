@@ -49,7 +49,6 @@
     <Compile Include="Progress\ProgressController.cs" />
     <Compile Include="Progress\ProgressControllerFactory.cs" />
     <Compile Include="Progress\ProgressProxy.cs" />
-    <Compile Include="Progress\SubprocessProgressToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

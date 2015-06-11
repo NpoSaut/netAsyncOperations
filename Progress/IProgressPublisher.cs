@@ -10,5 +10,6 @@ namespace AsyncOperations.Progress
 
         double Progress { get; }
         bool IsIntermediate { get; }
+        String Message { get; }
     }
 }

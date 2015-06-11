@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace AsyncOperations.Progress
 {
@@ -8,41 +9,50 @@ namespace AsyncOperations.Progress
     {
         private readonly double _completeWeight;
         private readonly IProgressToken _rootProgress;
-        private readonly ICollection<SubprocessProgressToken> _subprocesses;
-        private bool _compleated;
+        private readonly ICollection<Subprogress> _subprogresses;
+        private int _compleated;
+        private bool _compleatedPublished;
         private bool _started;
 
-        public CompositeProgressManager(IProgressToken RootProgress, params SubprocessProgressToken[] Subprocesses)
-            : this(RootProgress, (ICollection<SubprocessProgressToken>)Subprocesses) { }
+        public CompositeProgressManager(IProgressToken RootProgress, params Subprogress[] Subprocesses)
+            : this(RootProgress, (ICollection<Subprogress>)Subprocesses) { }
 
-        public CompositeProgressManager(IProgressToken RootProgress, ICollection<SubprocessProgressToken> Subprocesses)
+        public CompositeProgressManager(IProgressToken RootProgress, ICollection<Subprogress> Subprogresses)
         {
             if (RootProgress == null) return;
 
             _rootProgress = RootProgress;
-            _subprocesses = Subprocesses;
+            _subprogresses = Subprogresses;
 
-            foreach (SubprocessProgressToken subprocess in Subprocesses)
+            foreach (Subprogress subprocess in Subprogresses)
             {
-                subprocess.SetToIntermediate += SubprocessOnSetToIntermediate;
-                subprocess.ProgressChanged += SubprocessOnProgressChanged;
-                subprocess.Started += SubprocessOnStarted;
-                subprocess.Compleated += SubprocessOnCompleated;
+                subprocess.Progress.Changed += SubprogressOnChanged;
+                subprocess.Progress.Started += SubprocessOnStarted;
+                subprocess.Progress.Compleated += SubprocessOnCompleated;
             }
-            _completeWeight = _subprocesses.Sum(p => p.Weight);
+            _completeWeight = _subprogresses.Sum(p => p.Weight);
         }
 
         public void Dispose()
         {
-            if (!_compleated && _rootProgress != null)
+            if (!_compleatedPublished && _rootProgress != null)
                 _rootProgress.OnCompleated();
+        }
+
+        private void SubprogressOnChanged(object Sender, EventArgs Args)
+        {
+            var progr = (IProgressPublisher)Sender;
+            if (progr.IsIntermediate)
+                _rootProgress.SetToIntermediate();
+            else
+                _rootProgress.SetProgress(_subprogresses.Sum(p => p.Progress.Progress * p.Weight) / _completeWeight);
         }
 
         private void SubprocessOnCompleated(object Sender, EventArgs Args)
         {
-            if (_subprocesses.All(p => p.IsCompleated))
+            if (Interlocked.Increment(ref _compleated) == _subprogresses.Count - 1)
             {
-                _compleated = true;
+                _compleatedPublished = true;
                 _rootProgress.OnCompleated();
             }
         }
@@ -55,12 +65,17 @@ namespace AsyncOperations.Progress
                 _rootProgress.Start();
             }
         }
+    }
 
-        private void SubprocessOnProgressChanged(object Sender, EventArgs Args)
+    public class Subprogress
+    {
+        public Subprogress(double Weight, IProgressPublisher Progress)
         {
-            _rootProgress.SetProgress(_subprocesses.Sum(p => p.Complete * p.Weight) / _completeWeight);
+            this.Weight = Weight;
+            this.Progress = Progress;
         }
 
-        private void SubprocessOnSetToIntermediate(object Sender, EventArgs EventArgs) { _rootProgress.SetToIntermediate(); }
+        public Double Weight { get; private set; }
+        public IProgressPublisher Progress { get; private set; }
     }
 }

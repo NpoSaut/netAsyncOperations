@@ -20,6 +20,14 @@
                 _token.SetToIntermediate();
         }
 
+        /// <summary>Устанавливает сообщение с названием текущей операции</summary>
+        /// <param name="Message">Описание текущей операции</param>
+        public void SetMessage(string Message)
+        {
+            if (_token != null)
+                _token.SetMessageFormat(Message);
+        }
+
         /// <summary>Устанавливает текущее значение прогресса операции</summary>
         /// <param name="Progress">Доля выполнения операции (0.0 - 1.0)</param>
         public void SetProgress(double Progress)
