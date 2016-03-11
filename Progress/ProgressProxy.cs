@@ -4,7 +4,7 @@ namespace AsyncOperations.Progress
 {
     public class ProgressProxy : IProgressToken, IProgressPublisher
     {
-        private string _descriptionFormat = "{0:P0}";
+        private IDescriptionProvider _descriptionProvider = new GlobalDescriptionProvider("{0:P0}");
         public event EventHandler Started;
         public event EventHandler Changed;
         public event EventHandler Compleated;
@@ -14,7 +14,7 @@ namespace AsyncOperations.Progress
 
         public string Description
         {
-            get { return String.Format(_descriptionFormat, Progress); }
+            get { return _descriptionProvider.GetDescription(this); }
         }
 
         public void Start()
@@ -43,9 +43,9 @@ namespace AsyncOperations.Progress
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        public void SetDescription(string descriptionFormat)
+        public void SetDescription(IDescriptionProvider DescriptionProvider)
         {
-            _descriptionFormat = descriptionFormat;
+            _descriptionProvider = DescriptionProvider;
             OnChanged();
         }
 

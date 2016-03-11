@@ -2,14 +2,17 @@
 
 namespace AsyncOperations.Progress
 {
-    public interface IProgressPublisher
+    public interface IProgress
+    {
+        double Progress { get; }
+        bool IsIntermediate { get; }
+        string Description { get; }
+    }
+
+    public interface IProgressPublisher : IProgress
     {
         event EventHandler Started;
         event EventHandler Changed;
         event EventHandler Compleated;
-
-        double Progress { get; }
-        string Description { get; }
-        bool IsIntermediate { get; }
     }
 }

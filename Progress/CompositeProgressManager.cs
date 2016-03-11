@@ -41,7 +41,7 @@ namespace AsyncOperations.Progress
 
         private void SubprocessOnDescriptionChanged(object Sender, EventArgs Args)
         {
-            _rootProgress.SetDescription(((SubprocessProgressToken)Sender).Description);
+            _rootProgress.SetDescription(((SubprocessProgressToken)Sender).DescriptionProvider);
         }
 
         private void SubprocessOnCompleated(object Sender, EventArgs Args)
@@ -64,7 +64,7 @@ namespace AsyncOperations.Progress
 
         private void SubprocessOnProgressChanged(object Sender, EventArgs Args)
         {
-            _rootProgress.SetProgress(_subprocesses.Sum(p => p.Complete * p.Weight) / _completeWeight);
+            _rootProgress.SetProgress(_subprocesses.Sum(p => p.Progress * p.Weight) / _completeWeight);
         }
 
         private void SubprocessOnSetToIntermediate(object Sender, EventArgs EventArgs) { _rootProgress.SetToIntermediate(); }

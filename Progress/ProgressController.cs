@@ -30,8 +30,7 @@
         }
 
         /// <summary>Устанавливает описание производимой операции</summary>
-        /// <param name="Description">Формат описания операции (используйте {0:P0} для вывода процента выполнения)</param>
-        public void SetDescription(string Description)
+        public void SetDescription(IDescriptionProvider Description)
         {
             if (_token != null)
                 _token.SetDescription(Description);

@@ -30,6 +30,6 @@ namespace AsyncOperations.Progress
 
         /// <summary>Устанавливает описание производимой операции</summary>
         /// <param name="Description">Формат описания операции (используйте {0:P0} для вывода процента выполнения)</param>
-        void SetDescription(string Description);
+        void SetDescription(IDescriptionProvider Description);
     }
 }

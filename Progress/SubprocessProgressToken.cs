@@ -2,38 +2,52 @@
 
 namespace AsyncOperations.Progress
 {
-    public class SubprocessProgressToken : IProgressToken
+    public class SubprocessProgressToken : IProgressToken, IProgress
     {
         public SubprocessProgressToken(double Weight = 1.0)
         {
-            Complete = 0;
+            Progress = 0;
             this.Weight = Weight;
         }
 
-        public Double Complete { get; private set; }
+        public IDescriptionProvider DescriptionProvider { get; private set; }
+
         public Double Weight { get; private set; }
-        public string Description { get; private set; }
         public bool IsCompleated { get; private set; }
+        public Double Progress { get; private set; }
+        public bool IsIntermediate { get; private set; }
+
+        public string Description
+        {
+            get { return DescriptionProvider.ToString(); }
+        }
 
         void IProgressToken.Start() { OnStarted(); }
-        void IProgressToken.SetToIntermediate() { OnSetToIntermediate(); }
 
-        void IProgressToken.SetProgress(double Progress)
+        void IProgressToken.SetToIntermediate()
         {
-            Complete = Progress;
+            IsIntermediate = true;
+            OnSetToIntermediate();
+        }
+
+        void IProgressToken.SetProgress(double Value)
+        {
+            IsIntermediate = false;
+            Progress = Value;
             OnProgressChanged();
         }
 
         void IProgressToken.OnCompleated()
         {
-            Complete = 1.0;
+            IsIntermediate = false;
+            Progress = 1.0;
             IsCompleated = true;
             OnCompleated();
         }
 
-        void IProgressToken.SetDescription(string DescriptionFormat)
+        void IProgressToken.SetDescription(IDescriptionProvider DescriptionProvider)
         {
-            Description = DescriptionFormat;
+            this.DescriptionProvider = DescriptionProvider;
             OnDescriptionChanged();
         }
 

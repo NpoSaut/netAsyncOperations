@@ -8,6 +8,6 @@ namespace AsyncOperations.Progress
         void SetProgress(Double Progress);
         void SetToIntermediate();
         void OnCompleated();
-        void SetDescription(string descriptionFormat);
+        void SetDescription(IDescriptionProvider DescriptionProvider);
     }
 }
