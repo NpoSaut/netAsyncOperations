@@ -43,7 +43,11 @@ namespace AsyncOperations.Progress
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        public void SetDescription(string descriptionFormat) { _descriptionFormat = descriptionFormat; }
+        public void SetDescription(string descriptionFormat)
+        {
+            _descriptionFormat = descriptionFormat;
+            OnChanged();
+        }
 
         protected virtual void OnStarted()
         {
