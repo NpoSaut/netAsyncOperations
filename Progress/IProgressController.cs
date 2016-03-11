@@ -27,5 +27,9 @@ namespace AsyncOperations.Progress
 
         /// <summary>Устанавливает Intermediate-значение прогресса операции</summary>
         void SetToIntermediate();
+
+        /// <summary>Устанавливает описание производимой операции</summary>
+        /// <param name="Description">Формат описания операции (используйте {0:P0} для вывода процента выполнения)</param>
+        void SetDescription(string Description);
     }
 }

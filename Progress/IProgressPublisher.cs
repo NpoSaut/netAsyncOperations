@@ -9,6 +9,7 @@ namespace AsyncOperations.Progress
         event EventHandler Compleated;
 
         double Progress { get; }
+        string Description { get; }
         bool IsIntermediate { get; }
     }
 }

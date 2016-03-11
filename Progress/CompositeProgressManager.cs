@@ -28,6 +28,7 @@ namespace AsyncOperations.Progress
                 subprocess.ProgressChanged += SubprocessOnProgressChanged;
                 subprocess.Started += SubprocessOnStarted;
                 subprocess.Compleated += SubprocessOnCompleated;
+                subprocess.DescriptionChanged += SubprocessOnDescriptionChanged;
             }
             _completeWeight = _subprocesses.Sum(p => p.Weight);
         }
@@ -36,6 +37,11 @@ namespace AsyncOperations.Progress
         {
             if (!_compleated && _rootProgress != null)
                 _rootProgress.OnCompleated();
+        }
+
+        private void SubprocessOnDescriptionChanged(object Sender, EventArgs Args)
+        {
+            _rootProgress.SetDescription(((SubprocessProgressToken)Sender).Description);
         }
 
         private void SubprocessOnCompleated(object Sender, EventArgs Args)

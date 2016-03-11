@@ -14,6 +14,7 @@
             }
         }
 
+        /// <summary>Устанавливает Intermediate-значение прогресса операции</summary>
         public void SetToIntermediate()
         {
             if (_token != null)
@@ -28,7 +29,14 @@
                 _token.SetProgress(Progress);
         }
 
-        /// <summary>Устанавливает Intermediate-значение прогресса операции</summary>
+        /// <summary>Устанавливает описание производимой операции</summary>
+        /// <param name="Description">Формат описания операции (используйте {0:P0} для вывода процента выполнения)</param>
+        public void SetDescription(string Description)
+        {
+            if (_token != null)
+                _token.SetDescription(Description);
+        }
+
         public void Dispose()
         {
             if (_token != null)

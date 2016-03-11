@@ -4,12 +4,18 @@ namespace AsyncOperations.Progress
 {
     public class ProgressProxy : IProgressToken, IProgressPublisher
     {
+        private string _descriptionFormat = "{0:P0}";
         public event EventHandler Started;
         public event EventHandler Changed;
         public event EventHandler Compleated;
 
         public double Progress { get; private set; }
         public bool IsIntermediate { get; private set; }
+
+        public string Description
+        {
+            get { return String.Format(_descriptionFormat, Progress); }
+        }
 
         public void Start()
         {
@@ -36,6 +42,8 @@ namespace AsyncOperations.Progress
             EventHandler handler = Compleated;
             if (handler != null) handler(this, EventArgs.Empty);
         }
+
+        public void SetDescription(string descriptionFormat) { _descriptionFormat = descriptionFormat; }
 
         protected virtual void OnStarted()
         {

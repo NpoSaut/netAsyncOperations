@@ -12,6 +12,7 @@ namespace AsyncOperations.Progress
 
         public Double Complete { get; private set; }
         public Double Weight { get; private set; }
+        public string Description { get; private set; }
         public bool IsCompleated { get; private set; }
 
         void IProgressToken.Start() { OnStarted(); }
@@ -28,6 +29,12 @@ namespace AsyncOperations.Progress
             Complete = 1.0;
             IsCompleated = true;
             OnCompleated();
+        }
+
+        void IProgressToken.SetDescription(string DescriptionFormat)
+        {
+            Description = DescriptionFormat;
+            OnDescriptionChanged();
         }
 
         public event EventHandler Started;
@@ -59,6 +66,14 @@ namespace AsyncOperations.Progress
         protected virtual void OnProgressChanged()
         {
             EventHandler handler = ProgressChanged;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        public event EventHandler DescriptionChanged;
+
+        protected virtual void OnDescriptionChanged()
+        {
+            EventHandler handler = DescriptionChanged;
             if (handler != null) handler(this, EventArgs.Empty);
         }
     }
