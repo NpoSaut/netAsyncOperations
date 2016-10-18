@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="OperationTokens\AsyncOperationTokenBase.cs" />
     <Compile Include="OperationTokens\IAsyncOperationToken.cs" />
+    <Compile Include="Progress\CoarseProgressTokenDecorator.cs" />
     <Compile Include="Progress\CompositeProgressManager.cs" />
     <Compile Include="Progress\IDescriptionProvider.cs" />
     <Compile Include="Progress\IProgressController.cs" />
