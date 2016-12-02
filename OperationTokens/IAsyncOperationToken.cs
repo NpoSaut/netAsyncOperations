@@ -7,27 +7,28 @@ namespace AsyncOperations.OperationTokens
     {
         IProgressPublisher Progress { get; }
         bool CanAbort { get; }
-        event EventHandler<ExceptionHandledEventArgs> ExceptionHandled;
-        event EventHandler<AsyncOperationCompleatedEventArgs> Compleated;
+
+        void RunOnException(Action<Exception> ExceptionHandler);
+        void RunWhenCompleated(Action<AsyncOperationCompleatingStatus> CompletionHandler);
 
         void Abort();
+    }
+
+    public static class AsyncOperationTokenHelper
+    {
+        public static void RunOnException<TException>(this IAsyncOperationToken Token, Action<TException> ExceptionHandler) where TException : Exception
+        {
+            Token.RunOnException(e =>
+                                 {
+                                     if (e is TException)
+                                         ExceptionHandler((TException)e);
+                                 });
+        }
     }
 
     public enum AsyncOperationCompleatingStatus
     {
         Success,
         Error
-    }
-
-    public class AsyncOperationCompleatedEventArgs : EventArgs
-    {
-        public AsyncOperationCompleatedEventArgs(AsyncOperationCompleatingStatus Status) { this.Status = Status; }
-        public AsyncOperationCompleatingStatus Status { get; private set; }
-    }
-
-    public class ExceptionHandledEventArgs : EventArgs
-    {
-        public ExceptionHandledEventArgs(Exception HandledException) { this.HandledException = HandledException; }
-        public Exception HandledException { get; private set; }
     }
 }
