@@ -50,6 +50,7 @@
     <Compile Include="Progress\IProgressToken.cs" />
     <Compile Include="Progress\ProgressController.cs" />
     <Compile Include="Progress\ProgressControllerFactory.cs" />
+    <Compile Include="Progress\ProgressControllerHelper.cs" />
     <Compile Include="Progress\ProgressProxy.cs" />
     <Compile Include="Progress\SubprocessProgressToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
